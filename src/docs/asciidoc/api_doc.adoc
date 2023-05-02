@@ -1,0 +1,139 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+= API Guide REST Docs =
+(C) Jongok Ku
+:doctype: book
+:toc-title: Index
+:toc: auto
+:toclevels: 5
+:sectlinks:
+:icons: font
+:source-highlighter: prettify
+
+[[overview]]
+== 1.문서 개요
+* API에 대한 레퍼런스 문서 입니다.
+* 문의사항은 soulchild81@naver.com 으로 연락주세요
+
+[[api-status-codes]]
+== 2.API Exception 코드 (ex)
+|===
+| 숫자코드 | 코드 | 메세지
+| `_0_`
+| SUCCESS
+| 성공하였습니다
+| `_100_`
+| INVALID_PARAMS
+| 잘못된 파라미터입니다.
+| `_101_`
+| INVALID_ACCESS
+| 잘못된 접근입니다`
+| `_102_`
+| NONE_QUERY
+| 검색어가 존재하지 않습니다.
+| `_200_`
+| NOT_LOGGED
+| 로그인 후 이용할 수 있습니다.
+| `_201_`
+| NONE_TOKEN
+| ACCESS_TOKEN이 존재하지 않습니다.
+| `_202_`
+| INVALID_TOKEN
+| 유효한 TOKEN이 아닙니다.
+| `_300_`
+| CONNECTION_ERROR
+| 통신에 실패 했습니다.
+| `_1000_`
+| UNKNOWN_ERROR
+| 오류가 발생하였습니다.
+|===
+
+[[api-common-code]]
+== 3.API 공통 구조
+* 각 API 는 RESTFUL 하도록 POST , GET , PUT , DELETE , PATCH 등의 HTTP METHOD 를 명확히 하여 작성한다.
+* API 는 JSON 형식으로 결과를 반환함 다른 타입으로 리턴시 상세 기술한다.( ex)webview )
+* API 는 version 값을 가장 상위에 갖는다.
+* data 오브젝트 내에 리스트 형태 또는 단일개체의 값을 가진다.
+* API 공통 응답
+|===
+| Field | Description
+| `_return_code_`
+| 지정된 API 응답코드를 리턴한다.
+| `_message_`
+| 오류메세지
+| `_message_type_`
+| 오류메세지 코드
+| `_data_`
+| 데이터 오브젝트 (리스트 또는 단일개체)
+|===
+
+[[api]]
+== 4.Service API
+[[api-index1]]
+=== 4.1 차트 조회
+[[chart1]]
+==== 4.1.1 차트 홈 조회
+URI:: /api/v1/stock/chart/home
+HTTP Method:: GET
+Description:: 차트 홈에 사용되는 각 타입별 차트 5건씩 모두 조회하여 전달
+Authentication:: false
+
+.Http Request
+include::{snippets}/chartHome/http-request.adoc[]
+
+.Parameters
+|===
+| Parameter | type | Description
+| `page`
+| Integer
+| 조회할 페이지 +
+  default 1
+| `size`
+| Integer
+| 조회할 오브젝트의개수 +
+  default 5
+|===
+
+.Http Response
+include::{snippets}/chartHome/http-response.adoc[]
+
+.Result
+include::{snippets}/chartHome/response-fields-beneath-data.adoc[]
+
+[[chart2]]
+==== 4.1.2 타입별 차트 조회
+URI:: /api/v1/chart/{type}/list
+HTTP Method:: GET
+Description:: 집계 타입별 종목 차트 리스트 조회
+Authentication:: false
+
+.Http Request
+include::{snippets}/chartList/http-request.adoc[]
+
+.Parameters
+include::{snippets}/chartList/path-parameters.adoc[]
+
+
+.Http Response
+include::{snippets}/chartList/http-response.adoc[]
+
+.Result
+include::{snippets}/chartList/response-fields-beneath-data.adoc[]
+
+=== 4.2 테스트 관련 API
+[[test1]]
+==== 4.2.1 테스트 데이터 생성 및 변경
+URI:: /api/v1/stock/init
+HTTP Method:: POST
+Description:: DB 에 저장되어 있는 종목 차트 데이터를 랜덤하게  변경한다.
+              전체 종목을 조회하여 shuffle 한후 해당 인덱스로 업데이트 한다.
+Authentication:: false
+
+
+.Http Request
+include::{snippets}/testSet/http-request.adoc[]
+
+.Http Response
+include::{snippets}/testSet/http-response.adoc[]
